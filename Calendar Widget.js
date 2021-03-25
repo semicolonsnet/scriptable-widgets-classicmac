@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: light-gray; icon-glyph: magic;
+// icon-color: cyan; icon-glyph: calendar-alt;
 // src/settings.ts
 var params = JSON.parse(args.widgetParameter) || {};
 var settings = {
@@ -23,7 +23,7 @@ var settings = {
   widgetType: params.view ? params.view : "cal",
   showAllDayEvents: true,
   showCalendarBullet: false,
-  startWeekOnSunday: false,
+  startWeekOnSunday: true,
   showEventsOnlyForToday: false,
   nextNumOfDays: 7,
   showCompleteTitle: true,
@@ -530,13 +530,14 @@ async function getEvents(date, settings2) {
   }
   const futureEvents = [];
   for (const event of events) {
-    if ((settings2.showAllDayEvents &&
+    if (
+      (settings2.showAllDayEvents &&
         event.isAllDay &&
         event.startDate.getTime() >
-          new Date(new Date().setDate(new Date().getDate() - 1)).getTime())
-          ||
-       (event.endDate.getTime() > date.getTime())
-      ) {
+          new Date(new Date().setDate(new Date().getDate() - 1)).getTime()) ||
+      (event.endDate.getTime() > date.getTime() &&
+        !event.title.startsWith("Canceled:"))
+    ) {
         if (event.calendar.title !== "Deliveries") {
         
       futureEvents.push(event);
